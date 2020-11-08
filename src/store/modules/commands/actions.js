@@ -7,9 +7,7 @@ export default {
     });
     const responseData = await response.json();
     if (!response.ok) {
-      console.log('poop');
       const error = new Error(responseData.message || 'Failed to GET data!');
-      console.log(responseData);
       throw error;
     }
 
