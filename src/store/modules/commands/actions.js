@@ -1,17 +1,15 @@
 export default {
   async loadCommands(context) {
-    // if (!payload.forceRefresh) {
-    //   return;
-    // }
     const response = await fetch(
-      'http://localhost:5100/api/commands/', 
-      // 'http://localhost:7000/api/commands/', 
+      context.rootGetters.getConnString,
     {
       method: 'GET'
     });
     const responseData = await response.json();
     if (!response.ok) {
+      console.log('poop');
       const error = new Error(responseData.message || 'Failed to GET data!');
+      console.log(responseData);
       throw error;
     }
 
@@ -41,8 +39,7 @@ export default {
 
     //Using backticks instead of single quotes allows us to insert javascript into a string.
     const response = await fetch(
-      `http://localhost:5100/api/commands/`,
-      // `http://localhost:7000/api/commands/`,
+        context.rootGetters.getConnString,
       {
         method: 'POST',
         headers: {
@@ -74,14 +71,11 @@ export default {
 
     //Using backticks instead of single quotes allows us to insert javascript into a string.
     const response = await fetch(
-      `http://localhost:5100/api/commands/${commandId}`,
-      // `http://localhost:7000/api/commands/${commandId}`,
+      context.rootGetters.getConnString + `/${commandId}`,
       {
         method: 'DELETE'
       }
     );
-
-    // const responseData = await response.json();
 
     if (!response.ok) {
       //error ...
