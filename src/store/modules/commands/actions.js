@@ -50,7 +50,6 @@ export default {
           line: commandData.line,
           platform: commandData.platform
         })
-        // body: commandData
       }
     );
 
