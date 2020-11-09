@@ -4,7 +4,7 @@ import commandsModule from './modules/commands/index.js';
 const store = createStore({
     state() {
         return {
-            connString: 'http://jdccommanderapi.azurewebsites.net/api/commands'
+            connString: 'https://jdccommanderapi.azurewebsites.net/api/commands'
         }
     },
     modules: {

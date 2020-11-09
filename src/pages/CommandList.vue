@@ -71,7 +71,7 @@ export default {
         if (
           !this.activeFilter ||
           this.activeFilter.trim === '' ||
-          command.platform === this.activeFilter
+          command.platform.includes(this.activeFilter) // === this.activeFilter
         ) {
           return true;
         }
