@@ -5,6 +5,16 @@ export default {
   saveCommand(state, payload) {
     state.commands.push(payload);
   },
+  updateSelectedCommand(state, payload) {
+    const index = state.commands.findIndex(command => {
+      return command.id === +payload.id;
+    });
+    if (index > -1) {
+      state.commands[index].howTo = payload.howTo;
+      state.commands[index].line = payload.line;
+      state.commands[index].platform = payload.platform;
+    }
+  },
   deleteCommand(state, payload) {
     const index = state.commands.findIndex(command => {
         return command.id === payload;
@@ -12,6 +22,9 @@ export default {
     if (index > -1) {
       state.commands.splice(index, 1);
     }
+  },
+  setSelectedCommandId(state, payload) {
+    state.selectedCommandId = payload;
   },
   setCommandFilter(state, payload) {
     state.commandFilter = payload;

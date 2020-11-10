@@ -5,7 +5,7 @@ export default {
     {
       method: 'GET'
     });
-    const responseData = await response.json();
+    const responseData = await response.json();    
     if (!response.ok) {
       const error = new Error(responseData.message || 'Failed to GET data!');
       throw error;
@@ -63,6 +63,48 @@ export default {
       });
     }
   },
+
+  async updateSelectedCommand(context, payload) {
+    const commandId = context.state.selectedCommandId;
+    const commandData = {
+      howTo: payload.howTo,
+      line: payload.line,
+      platform: payload.platform
+    };
+    
+
+    //Using backticks instead of single quotes allows us to insert javascript into a string.
+    const response = await fetch(
+        context.rootGetters.getConnString + `/${commandId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          howTo: commandData.howTo,
+          line: commandData.line,
+          platform: commandData.platform
+        })
+      }
+    );
+
+    // const responseData = await response.json();
+    console.log(response);
+
+    if (!response.ok) {
+      console.log(response.statusText);
+    } else {    
+      // const updatedCommandId = responseData.id;
+      
+      context.commit('updateSelectedCommand', {
+        ...commandData,
+        id: commandId
+      });
+      context.commit('setSelectedCommandId', null);
+    }
+  },
+
   async deleteCommand(context, payload) {
     const commandId = payload;
 
@@ -75,10 +117,14 @@ export default {
     );
 
     if (!response.ok) {
-      //error ...
+      console.log(response.statusText);
     }
 
     context.commit('deleteCommand', commandId);
+  },
+
+  updateSelectedCommandId(context, payload) {
+    context.commit('setSelectedCommandId', payload);
   },
 
   updateCommandFilter(context, payload) {

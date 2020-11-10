@@ -5,6 +5,7 @@
     <h4 class="easy-eye-text">{{ platformDesc }}</h4>
     <div class="actions">
       <base-button @click="copyCommand">Copy Command</base-button>
+      <base-button mode="edit" link :to="editCommandLink">E</base-button>
     <!-- </div>
     <div class="actions"> -->
       <base-button mode="alert" @click="deleteCommand">X</base-button>
@@ -14,13 +15,14 @@
 
 <script>
 // import { useStore } from 'vuex';
-// import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 export default {
   props: ['id', 'howTo', 'line', 'platform', 'commands'],
   emits: [ 'delete-command' ],
   setup(props, { emit }) {
     // const store = useStore();
-    // const router = useRouter();
+    const route = useRoute();
     // const howToDesc = props.howTo;
     // const lineDesc = props.line;
     // const platformDesc = props.platform;
@@ -34,11 +36,16 @@ export default {
       }
     }
 
+    const editCommandLink = computed(function() {
+      // return route.path + '/' + props.id + '/edit';
+      return route.path + '/' + props.id;
+    })
+
     function deleteCommand() { 
       emit('delete-command', props.id);
     }
 
-    return {idDesc: props.id, howToDesc: props.howTo, lineDesc: props.line, platformDesc: props.platform, copyCommand, deleteCommand}
+    return {idDesc: props.id, howToDesc: props.howTo, lineDesc: props.line, platformDesc: props.platform, copyCommand, editCommandLink, deleteCommand}
   },
   // computed: {
   //   copyCommand() {

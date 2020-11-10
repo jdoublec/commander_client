@@ -5,7 +5,7 @@
       <input
         type="text"
         id="howTo"
-        v-model.trim="howTo"
+        v-model.trim="howToRef"
         @blur="clearValidity('howTo')"
       />
       <p v-if="!howToIsValid">How To must not be empty.</p>
@@ -15,7 +15,7 @@
       <input
         type="text"
         id="line"
-        v-model.trim="line"
+        v-model.trim="lineRef"
         @blur="clearValidity('line')"
       />
       <p v-if="!lineIsValid">Command Line must not be empty.</p>
@@ -25,44 +25,53 @@
       <input
         id="platform"
         rows="5"
-        v-model.trim="platform"
+        v-model.trim="platformRef"
         @blur="clearValidity('platform')"
       />
       <p v-if="!platformIsValid">Platform must not be empty.</p>
     </div>
     <p v-if="!formIsValid">Please fix the above errors and submit again.</p>
-    <base-button>Add Command</base-button>
+    <base-button>{{ submitButtonCaption  }}</base-button>
+    <base-button @click.prevent="cancelForm">Cancel</base-button>
   </form>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 // import { useStore } from 'vuex';
 // import { useRouter } from 'vue-router';
 export default {
-  emits: ['save-command'],
+  // props: ['id', 'howTo', 'line', 'platform', 'commands'],
+  props: ['id', 'howTo', 'line', 'platform', 'editMode' ],
+  emits: ['update-command', 'save-command'],
   setup(props, { emit }) {
     // const store = useStore();
-    // const router= useRouter();
-    const howTo = ref('');
-    const line = ref('');
-    const platform = ref('');
+    const router= useRouter();
+    const howToRef = ref(props.howTo);    
+    const lineRef = ref(props.line);
+    const platformRef = ref(props.platform);
     const formIsValid = ref(true);
     const howToIsValid = ref(true);
     const lineIsValid = ref(true);
     const platformIsValid = ref(true);
 
+    const submitButtonCaption = computed(function() {
+      return props.editMode ? 'Update Command' : 'Add Command';
+    })
+
     function validateForm() {
       formIsValid.value = true;
-      if (howTo.value === '') {
+      if (howToRef.value === '') {
         howToIsValid.value = false;
         formIsValid.value = false;
       }
-      if (line.value === '') {
+      if (lineRef.value === '') {
         lineIsValid.value = false;
         formIsValid.value = false;
       }
-      if (platform.value === '') {
+      if (platformRef.value === '') {
         platformIsValid.value = false;
         formIsValid.value = false;
       }
@@ -75,34 +84,44 @@ export default {
         return;
       }
 
-      const formData = {
-        howTo: howTo.value,
-        line: line.value,
-        platform: platform.value
-      };
+      const formData = {        
+          howTo: howToRef.value,
+          line: lineRef.value,
+          platform: platformRef.value
+        };
 
-      emit('save-command', formData);      
+      if (props.editMode) {        
+        emit('update-command', formData);  
+      } else {        
+        emit('save-command', formData);      
+      }
+    }
+
+    function cancelForm() {
+      router.back();
     }
 
     function clearValidity(input) {
-      if (input === 'howTo' && howTo.value !== '') {
+      if (input === 'howTo' && howToRef.value !== '') {
         howToIsValid.value = true;
-      } else if (input === 'line' && line.value !== '') {
+      } else if (input === 'line' && lineRef.value !== '') {
         lineIsValid.value = true;
-      } else if (input === 'platform' && platform.value !== '') {
+      } else if (input === 'platform' && platformRef.value !== '') {
         platformIsValid.value = true;
       }
     }
 
     return {
-      howTo,
-      line,
-      platform,
+      howToRef,
+      lineRef,
+      platformRef,
       formIsValid,
       howToIsValid,
       lineIsValid,
       platformIsValid,
+      submitButtonCaption,
       submitForm,
+      cancelForm,
       clearValidity
     };
   }

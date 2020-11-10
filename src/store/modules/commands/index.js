@@ -7,7 +7,8 @@ export default {
   state() {
     return {
       commands: [],
-      commandFilter: ''
+      commandFilter: '',
+      selectedCommandId: null      
     };
   },
   

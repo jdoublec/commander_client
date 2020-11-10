@@ -2,16 +2,19 @@
   <section>
     <base-card>
       <h2>Add a new Command</h2>
-      <command-form @save-command="saveCommand"></command-form>
+      <command-form
+        :editMode="false"
+        @save-command="saveCommand"
+      ></command-form>
     </base-card>
   </section>
 </template>
 
 <script>
-import CommandForm from "../components/commands/CommandForm.vue";
+import CommandForm from '../components/commands/CommandForm.vue';
 export default {
   components: {
-    CommandForm,
+    CommandForm
   },
   methods: {
     async saveCommand(newCommand) {

@@ -51,15 +51,7 @@ export default {
   },
   mounted: function() {
     this.getFilter();
-    // this.activeFilter = this.$store.getters.getCommandFilter;
-    // console.log('filteredCommands ' + this.activeFilter);
-    // this.filteredCommands;
   },
-  // watch: {
-  //   allCommands() {
-  //     return this.allCommands;
-  //   }
-  // },
   computed: {
     allCommands() {
       return this.$store.getters['commands/getCommands'];
@@ -82,7 +74,6 @@ export default {
   methods: {
     getFilter() {
       this.activeFilter = this.$store.getters['commands/getCommandFilter'];
-      console.log('filteredCommands ' + this.activeFilter);
     },
     setFilter(updatedFilter) {
       this.$store.dispatch('commands/updateCommandFilter', updatedFilter);
@@ -90,10 +81,10 @@ export default {
     },
     async loadData() {
       try {
-        // await store.dispatch.loadCommands;//('loadCommands');
         await this.$store.dispatch('commands/loadCommands');
       } catch (error) {
         this.error = error.message || 'Could not load Commands!';
+        console.log(this.error);
       }
     },
     async deleteCommand(id) {

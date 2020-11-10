@@ -64,6 +64,12 @@ button:active {
   color: rgb(66, 97, 68);
 }
 
+.edit {
+  background-color: transparent;
+  border-color: rgb(66, 97, 68);
+  color:rgb(66, 97, 68);
+}
+
 .alert {
   background-color: transparent;
   border-color: tomato;
