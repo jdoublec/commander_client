@@ -4,6 +4,8 @@
       <command-filter
         :commands="allCommands"
         @change-filter="setFilter"
+        @change-keyword="setKeyword"
+        @change-sort="setSort"
       ></command-filter>
     </section>
     <section>
@@ -43,7 +45,9 @@ export default {
   },
   data() {
     return {
-      activeFilter: ''
+      activeFilter: '',
+      activeKeyword: '',
+      activeSort: ''
     };
   },
   created() {
@@ -51,24 +55,50 @@ export default {
   },
   mounted: function() {
     this.getFilter();
+    this.getKeyword();
+    this.getSort();
   },
   computed: {
     allCommands() {
       return this.$store.getters['commands/getCommands'];
     },
     filteredCommands() {
-      // console.log('filteredCommands ' + this.activeFilter);
       const commands = this.allCommands;
-      return commands.filter(command => {
+      const filteredPlatform = this.activeFilter.toLowerCase();
+      const keyword = this.activeKeyword.toLowerCase();
+      const filtered = commands.filter(command => {
+        const platform = command.platform.toLowerCase();
         if (
           !this.activeFilter ||
           this.activeFilter.trim === '' ||
-          command.platform.includes(this.activeFilter) // === this.activeFilter
+          platform.includes(filteredPlatform)
         ) {
           return true;
         }
         return false;
       });
+
+      const keyworded = filtered.filter(command => {
+        const howTo = command.howTo.toLowerCase();
+        const line = command.line.toLowerCase();
+        const platform = command.platform.toLowerCase();
+        if (
+          !this.activeKeyword ||
+          this.activeKeyword.trim === '' ||
+          howTo.includes(keyword) ||
+          line.includes(keyword) ||
+          platform.includes(keyword)
+        ) {
+          return true;
+        }
+        return false;
+      });
+
+      if (this.activeSort === '') {
+        return keyworded;
+      } else {
+        return keyworded.sort((a, b) => a[this.activeSort].localeCompare(b[this.activeSort]));
+      }
     }
   },
   methods: {
@@ -78,6 +108,20 @@ export default {
     setFilter(updatedFilter) {
       this.$store.dispatch('commands/updateCommandFilter', updatedFilter);
       this.activeFilter = updatedFilter;
+    },
+    getKeyword() {
+      this.activeKeyword = this.$store.getters['commands/getCommandKeyword'];
+    },
+    setKeyword(keyword) {
+      this.$store.dispatch('commands/updateCommandKeyword', keyword);
+      this.activeKeyword = keyword;
+    },
+    getSort() {
+      this.activeSort = this.$store.getters['commands/getCommandSort'];
+    },
+    setSort(sort) {
+      this.$store.dispatch('commands/updateCommandSort', sort);
+      this.activeSort = sort;
     },
     async loadData() {
       try {

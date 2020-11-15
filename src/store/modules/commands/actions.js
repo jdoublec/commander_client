@@ -89,8 +89,7 @@ export default {
       }
     );
 
-    // const responseData = await response.json();
-    console.log(response);
+    // const responseData = await response.json();    
 
     if (!response.ok) {
       console.log(response.statusText);
@@ -129,5 +128,11 @@ export default {
 
   updateCommandFilter(context, payload) {
     context.commit('setCommandFilter', payload);
+  },
+  updateCommandKeyword(context, payload) {
+    context.commit('setCommandKeyword', payload);
+  },
+  updateCommandSort(context, payload) {
+    context.commit('setCommandSort', payload);
   }
 };

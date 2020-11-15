@@ -28,5 +28,11 @@ export default {
   },
   setCommandFilter(state, payload) {
     state.commandFilter = payload;
+  },
+  setCommandKeyword(state, payload) {
+    state.commandKeyword = payload;
+  },
+  setCommandSort(state, payload) {
+    state.commandSort = payload;
   }
 };

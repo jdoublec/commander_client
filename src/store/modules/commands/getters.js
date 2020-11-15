@@ -16,5 +16,11 @@ export default {
   },
   getCommandFilter(state) {
     return state.commandFilter;
+  },
+  getCommandKeyword(state) {
+    return state.commandKeyword;
+  },
+  getCommandSort(state) {
+    return state.commandSort;
   }
 };

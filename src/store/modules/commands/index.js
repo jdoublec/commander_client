@@ -8,6 +8,8 @@ export default {
     return {
       commands: [],
       commandFilter: '',
+      commandKeyword: '',
+      commandSort: '',
       selectedCommandId: null      
     };
   },

@@ -3,51 +3,89 @@
     <h2>Find Your Command</h2>
     <span class="filter-option">
       <label for="platform">Platform:</label>
-      <select id="platform" :value="defaultValue" @change="setFilter">      
-          <option></option>
-          <option v-for="platform in platforms" :key="platform" :value="platform" >{{ platform }}</option>
+      <select id="platform" :value="defaultFilter" @change="setFilter">
+        <option></option>
+        <option
+          v-for="platform in platforms"
+          :key="platform"
+          :value="platform"
+          >{{ platform }}</option
+        >
       </select>
-    </span>    
+      <label for="keyword">Keyword:</label>
+      <input type="text" id="keyword" :value="defaultKeyword" @input="findKeyword"  />
+      <label for="sort">Sort:</label>
+      <select id="sort" :value="defaultSort" @change="setSort">
+        <option></option>
+        <option value="howTo">How To</option>
+        <option value="line">Line</option>
+        <option value="platform">Platform</option>
+      </select>
+    </span>
   </base-card>
 </template>
 
 <script>
 export default {
-    props: ['commands'],
-    emtis: ['change-filter'],
-    data() {
-        return {
-            filters: ''       
-        };
-    },
-    computed: {
-        platforms() {            
-            return [...new Set(this.commands.map(command => command.platform))];
-        },    
-        defaultValue() {
-          return this.$store.getters['commands/getCommandFilter'];
-        }    
-    },
-    methods: {
-        setFilter(event) {
-            const updatedFilters = event.target.value;
-            this.filters = updatedFilters;
-            this.$emit('change-filter', updatedFilters);
+  props: ['commands'],
+  emits: ['change-filter', 'change-keyword', 'change-sort'],
+  computed: {
+    platforms() {
+      // return [...new Set(this.commands.map(command => command.platform))];
+      var platforms = [];
+      for (let command of this.commands) {
+        const lcPlatform = command.platform.toLowerCase();
+        var platformFound = false;
+        if (platforms.length > 0) {
+          for (let i = 0; i < platforms.length; i++) {
+            if (platforms[i].toLowerCase() === lcPlatform.toString()) {
+              platformFound = true;
+              break;
+            }
+          }
         }
+        if (!platforms || !platformFound) {
+          platformFound = false;
+          platforms.push(command.platform);
+        }
+      }
+
+      return platforms;
+    },
+    defaultFilter() {
+      return this.$store.getters['commands/getCommandFilter'];
+    },
+    defaultKeyword() {
+      return this.$store.getters['commands/getCommandKeyword'];
+    },
+    defaultSort() {
+      return this.$store.getters['commands/getCommandSort'];
     }
-}
+  },
+  methods: {
+    setFilter(event) {
+      this.$emit('change-filter', event.target.value);
+    },
+    findKeyword(event) {
+      this.$emit('change-keyword', event.target.value);
+    },
+    setSort(event) {
+      this.$emit('change-sort', event.target.value);
+    }
+  }
+};
 </script>
 
 <style scoped>
 h2 {
-  margin: 0.5rem 0;  
+  margin: 0.5rem 0;
   text-align: center;
 }
 
-.filter-option {
-  margin-left: 1rem; 
-  margin-right: 1rem;
-}
+/* .filter-option { */
+  /* margin-left: 1rem;  */
+  /* margin-right: 1rem; */
+/* } */
 
 .filter-option label,
 .filter-option select {
@@ -58,10 +96,17 @@ h2 {
   margin-left: 0.25rem;
 }
 
-.filter-option select {
-    margin-left: 1rem;
-    width: 15rem;
-    background-color: lightgray;
+.filter-option select,
+.filter-option input {
+  margin-left: 0.25rem;
+  width: 27%;
+  background-color: lightgray;
+}
+
+.filter-option > #sort {
+  /* margin-left: 0.25rem; */
+  width: 12%;
+  /* background-color: lightgray; */
 }
 
 .filter-option.active label {

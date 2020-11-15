@@ -1,1 +1,4 @@
-look into what lifecylce hook to use after created to call filteredCommands
+Add error messaging.
+Add delete error question.
+Add Auth.
+Add Security to API.
