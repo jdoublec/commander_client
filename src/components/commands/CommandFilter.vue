@@ -1,6 +1,9 @@
 <template>
   <base-card>
+    <div class="header-div">
     <h2>Find Your Command</h2>
+    <base-button mode="outline" class="button" @click="clearFilters">Clear</base-button>
+    </div>
     <span class="filter-option">
       <label for="platform">Platform:</label>
       <select id="platform" :value="defaultFilter" @change="setFilter">
@@ -26,7 +29,9 @@
 </template>
 
 <script>
+import BaseButton from '../ui/BaseButton.vue';
 export default {
+  components: { BaseButton },
   props: ['commands'],
   emits: ['change-filter', 'change-keyword', 'change-sort'],
   computed: {
@@ -71,15 +76,35 @@ export default {
     },
     setSort(event) {
       this.$emit('change-sort', event.target.value);
+    },
+    clearFilters() {
+      this.$emit('change-filter', event.target.value);
+      this.$emit('change-keyword', event.target.value);
+      this.$emit('change-sort', event.target.value);
     }
   }
 };
 </script>
 
 <style scoped>
+
+.header-div {
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
 h2 {
+  display: inline;
+  width: 50%;
+  padding-left: 0.25rem;
   margin: 0.5rem 0;
-  text-align: center;
+  text-align: left;
+}
+
+.button {
+  display: inline;
+  float: right;
+  padding: 0.25rem 1.5rem;
 }
 
 /* .filter-option { */

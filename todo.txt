@@ -1,4 +1,2 @@
-Add error messaging.
-Add delete error question.
 Add Auth.
 Add Security to API.

@@ -1,12 +1,12 @@
-<template>
-  <li>
+<template>  
+  <li @click="copyCommand">
     <h3 class="easy-eye-text">{{ howToDesc }}</h3>
     <h4 class="easy-eye-text">{{ lineDesc }}</h4>
     <h4 class="easy-eye-text">{{ platformDesc }}</h4>
     <div class="actions">
       <base-button @click="copyCommand">Copy Command</base-button>
-      <base-button mode="edit" link :to="editCommandLink">E</base-button>
-    <!-- </div>
+      <base-button mode="edit" link :to="editCommandLink">&#9999;&#65039;</base-button>
+      <!-- </div>
     <div class="actions"> -->
       <base-button mode="alert" @click="deleteCommand">X</base-button>
     </div>
@@ -19,7 +19,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 export default {
   props: ['id', 'howTo', 'line', 'platform', 'commands'],
-  emits: [ 'delete-command' ],
+  emits: ['delete-command'],
   setup(props, { emit }) {
     // const store = useStore();
     const route = useRoute();
@@ -39,13 +39,21 @@ export default {
     const editCommandLink = computed(function() {
       // return route.path + '/' + props.id + '/edit';
       return route.path + '/' + props.id;
-    })
+    });
 
-    function deleteCommand() { 
-      emit('delete-command', props.id);
+    function deleteCommand() {
+      emit('delete-command', props.id, props.howTo);
     }
 
-    return {idDesc: props.id, howToDesc: props.howTo, lineDesc: props.line, platformDesc: props.platform, copyCommand, editCommandLink, deleteCommand}
+    return {
+      idDesc: props.id,
+      howToDesc: props.howTo,
+      lineDesc: props.line,
+      platformDesc: props.platform,
+      copyCommand,
+      editCommandLink,
+      deleteCommand
+    };
   },
   // computed: {
   //   copyCommand() {
@@ -58,7 +66,7 @@ export default {
     // console.log(this.line);
     // // document.execCommand(this.line);
     // }
-  },
+  }
 };
 </script>
 

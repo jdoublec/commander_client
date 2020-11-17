@@ -1,5 +1,13 @@
 <template>
   <div>
+    <base-dialog
+      :show="!!error"
+      :title="title"
+      @close="handleError"
+      :dialogType="errorType"
+    >
+      <p>{{ error }}</p>
+    </base-dialog>
     <section>
       <command-filter
         :commands="allCommands"
@@ -36,15 +44,21 @@
 <script>
 import CommandItem from '../components/commands/CommandItem.vue';
 import CommandFilter from '../components/commands/CommandFilter.vue';
+import BaseCard from '../components/ui/BaseCard.vue';
 // import { computed } from 'vue';
 // import { useStore } from 'vuex';
 export default {
   components: {
     CommandItem,
-    CommandFilter
+    CommandFilter,
+    BaseCard
   },
   data() {
     return {
+      selectedId: null,
+      title: '',
+      error: null,
+      errorType: '',
       activeFilter: '',
       activeKeyword: '',
       activeSort: ''
@@ -97,7 +111,9 @@ export default {
       if (this.activeSort === '') {
         return keyworded;
       } else {
-        return keyworded.sort((a, b) => a[this.activeSort].localeCompare(b[this.activeSort]));
+        return keyworded.sort((a, b) =>
+          a[this.activeSort].localeCompare(b[this.activeSort])
+        );
       }
     }
   },
@@ -127,46 +143,34 @@ export default {
       try {
         await this.$store.dispatch('commands/loadCommands');
       } catch (error) {
+        this.errorType = 'close';
         this.error = error.message || 'Could not load Commands!';
-        console.log(this.error);
       }
     },
-    async deleteCommand(id) {
+    deleteCommand(id, howTo) {
+      this.selectedId = id;
+      this.title = 'Delete Command!!!';
+      this.errorType = 'delete';
+      this.error = `Do you want to delete Command '${howTo}'?`;
+    },
+    async deleteCommandConfirmed() {
       try {
-        await this.$store.dispatch('commands/deleteCommand', id);
+        await this.$store.dispatch('commands/deleteCommand', this.selectedId);
         this.$store.getters['commands/getCommands'];
-        // this.allCommands;
-        // this.filteredCommands;
       } catch (err) {
         console.log(err);
       }
+    },
+    handleError(response = false) {
+      if (response) {
+        this.deleteCommandConfirmed();
+      }
+      this.selectedId = null;
+      this.title = '';
+      this.errorType = '';
+      this.error = null;
     }
   }
-  // setup() {
-  //   const store = useStore();
-
-  //   loadData();
-
-  //   async function loadData() {
-  //     try {
-  //       // await store.dispatch.loadCommands;//('loadCommands');
-  //       console.log('loading');
-  //       await store.dispatch('loadCommands');
-  //     } catch (error) {
-  //       this.error = error.message || 'Could not load Commands!';
-  //     }
-  //   }
-
-  //   const commands = computed(function() {
-  //     return store.getters.getCommands;
-  //   })
-
-  //   const hasCommands = computed(function() {
-  //     return store.getters.hasCommands;
-  //   })
-
-  //   return { filteredCommands: commands, hasCommands }
-  // }
 };
 </script>
 

@@ -66,6 +66,8 @@ button:active {
 
 .edit {
   background-color: transparent;
+  /* background-image: "U+270f"; */
+  /* content: "U+270f"; */
   border-color: rgb(66, 97, 68);
   color:rgb(66, 97, 68);
 }
